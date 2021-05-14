@@ -1,17 +1,45 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <el-input type="number" v-model="num" placeholder="请输入内容"></el-input>
+    <el-button type="primary" @click="calc">计算</el-button>
+    <div>
+      <span>计算结果：</span>
+      <span>{{ result }}</span>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+import Worker from "./my.worker";
 export default {
   name: "App",
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      num: 0,
+      worker: null,
+      result: 0,
+    };
+  },
+  created() {
+    console.log(1, Worker);
+    this.worker = new Worker();
+    console.log(2, this.worker);
+    this.worker.onmessage = function (event) {
+      console.log("event", event);
+    };
+  },
+  methods: {
+    calc() {
+      // this.result=this.fib(this.num)
+      this.worker.postMessage(this.num);
+    },
+    fib(n) {
+      if (n <= 2) {
+        return 1;
+      } else {
+        return this.fib(n - 1) + this.fib(n - 2);
+      }
+    },
   },
 };
 </script>

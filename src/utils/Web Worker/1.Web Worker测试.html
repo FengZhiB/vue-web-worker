@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker测试</title>
+    <script>
+        // 1.H5分线程 取名Web Workers
+        // 2.相关API 
+        /*
+        01.Worker:构造函数，加载分线程执行的js文件
+        02.Worker.prototype.onmessage  用于接受另一个线程的回调函数
+        03.Worker.prototype.postMessage 向另一个线程发送消息
+        */
+        // 3.不足：兼容性、不能操作DOM、无法跨域
+    </script>
+</head>
+
+<body>
+    <input type="number" min="1" id="num">
+    <button id="btn">计算</button>
+</body>
+<script>
+    let worker = new Worker('worker.js')
+    // let num = document.getElementById('num')
+    // let btn = document.getElementById('btn')
+    // function fib(n){
+    //     if(n<=2){
+    //         return 1
+    //     }else{
+    //         return fib(n-1)+fib(n-2)
+    //     }
+    // }
+    // clac.onclick=function(){
+    //     alert(fib(num.value))
+    // }
+    // let worker = null
+    worker.onerror = (e) => {
+        console.log("err", e.message)
+    }
+    worker.onmessage = function (event) {
+        console.log("主线程", event.data)
+    }
+    btn.onclick = function () {
+        worker.postMessage(Number(num.value))
+    }
+</script>
+
+</html>
