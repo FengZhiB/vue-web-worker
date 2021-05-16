@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>共享Worker1</title>
+</head>
+<body>
+    <input type="number" min="1" id="num">
+    <button id="btn">计算</button>
+    <span id="res"></span>
+</body>
+<script>
+    let num = document.getElementById('num')
+    let btn = document.getElementById('btn')
+    let res = document.getElementById('res')
+    let sharedworker = new SharedWorker('./sharedworker.js', 'work')
+
+    worker = sharedworker.port
+    worker.addEventListener("message", function (event) {
+        res.innerHTML=`1斐波那契计算结果:${event.data}`
+    	console.log("斐波那契计算结果" + event.data); //9
+    });
+    worker.onmessageerror=function(e) {
+        console.log("err", e.message)
+    }
+    worker.start()
+
+    btn.onclick = function () {
+        res.innerHTML="1计算中。。。"
+        console.log(worker)
+        worker.postMessage(Number(num.value))
+    }
+</script>
+</html>

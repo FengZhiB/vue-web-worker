@@ -21,11 +21,13 @@
 <body>
     <input type="number" min="1" id="num">
     <button id="btn">计算</button>
+    <span id="res"></span>
 </body>
 <script>
     let worker = new Worker('worker.js')
-    // let num = document.getElementById('num')
-    // let btn = document.getElementById('btn')
+    let num = document.getElementById('num')
+    let btn = document.getElementById('btn')
+    let res=document.getElementById("res")
     // function fib(n){
     //     if(n<=2){
     //         return 1
@@ -41,9 +43,12 @@
         console.log("err", e.message)
     }
     worker.onmessage = function (event) {
+        res.innerHTML=`worker计算斐波那契结果：${event.data}`
         console.log("主线程", event.data)
     }
+    
     btn.onclick = function () {
+        res.innerHTML="计算中。。。"
         worker.postMessage(Number(num.value))
     }
 </script>
